@@ -4,6 +4,9 @@ services:
   database:
     container_name: kupipodariday-db
     image: postgres:13-alpine
+    build:
+      context: ./database
+    restart: unless-stopped
     env_file: .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -24,6 +27,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    restart: unless-stopped
     env_file: .env
     ports:
       - "4000:3000"
@@ -34,7 +38,7 @@ services:
       - frontend-network
     environment:
       NODE_ENV: production
-      POSTGRES_HOST: database
+      POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: "5432"
 
   frontend:
@@ -42,6 +46,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    restart: unless-stopped
     ports:
       - "8081:80"
     depends_on:
