@@ -4,14 +4,13 @@ services:
   database:
     container_name: kupipodariday-db
     image: postgres:13-alpine
-    env_file:
-      - .env
+    env_file: .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     networks:
       - backend-network
     healthcheck:
@@ -25,20 +24,18 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    env_file:
-      - .env
+    env_file: .env
     ports:
       - "4000:3000"
     depends_on:
-      database:
-        condition: service_healthy
+      - database
     networks:
       - backend-network
       - frontend-network
     environment:
-      - NODE_ENV=production
-      - POSTGRES_HOST=database
-      - POSTGRES_PORT=5432
+      NODE_ENV: production
+      POSTGRES_HOST: database
+      POSTGRES_PORT: "5432"
 
   frontend:
     container_name: kupipodariday-frontend
