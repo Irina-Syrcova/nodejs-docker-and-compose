@@ -4,8 +4,6 @@ services:
   database:
     container_name: kupipodariday-db
     image: postgres:13-alpine
-    build:
-      context: ./database
     restart: unless-stopped
     env_file: .env
     volumes:
